@@ -44,7 +44,7 @@ Skillbridge_JP/
 ---
 
 ## Demo Access (For Reviewers)
-You can explore the live platform at [https://onrender.com](https://onrender.com) by registering a new account or logging in with the demo credentials below:
+You can explore the live platform at [[https://onrender.com](https://onrender.com)](https://skillbridge-jp.onrender.com) by registering a new account or logging in with the demo credentials below:
 
 * **Candidate Portal:** `[your-demo-candidate@email.com]` / `[Password]`
 * **Recruiter Portal:** `[your-demo-recruiter@email.com]` / `[Password]`
