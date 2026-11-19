@@ -1,6 +1,6 @@
 # SkillBridge JP — International Talent Readiness Platform
 
-**Live Application:** [https://onrender.com](https://onrender.com)  
+**Live Application:** https://skillbridge-jp.onrender.com 
 *(Note: Hosted on Render free tier; initial page load may take ~30 seconds to wake up.)*
 
 ## Overview
@@ -44,11 +44,11 @@ Skillbridge_JP/
 ---
 
 ## Demo Access (For Reviewers)
-You can explore the live platform at [[https://onrender.com](https://onrender.com)](https://skillbridge-jp.onrender.com) by registering a new account or logging in with the demo credentials below:
+You can explore the live platform https://skillbridge-jp.onrender.com by registering a new account or logging in with the demo credentials below:
 
-* **Candidate Portal:** `[your-demo-candidate@email.com]` / `[Password]`
-* **Recruiter Portal:** `[your-demo-recruiter@email.com]` / `[Password]`
-* **Admin Portal:** `[your-demo-admin@email.com]` / `[Password]`
+* **Candidate Portal:** `Candidate Gmail id - Deepak@gmail.com` / `Password - 123`
+* **Recruiter Portal:** `Recruiter Gmail id - thaya@gmail.com` / `Password - 123`
+* **Admin Portal:** `Admin Gmail id - vishnuadmin@gmail.com` / `Password - 123`
 
 ---
 
