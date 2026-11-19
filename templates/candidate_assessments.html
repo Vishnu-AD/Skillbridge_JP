@@ -1,0 +1,274 @@
+{% extends "layout.html" %}
+{% block title %}Assessments • SkillBridge JP{% endblock %}
+{% block content %}
+<div class="big-title mb-1">Assessments</div>
+<div class="subtle mb-4">Technical + JLPT + Keigo + HR Interview → Verified readiness support.</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="cardx p-4">
+      <div class="fw-bold fs-5 mb-2">Tech MCQ (5)</div>
+      <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+        <input type="hidden" name="action" value="submit_tech"/>
+
+        <div class="mb-3">
+          <div class="fw-semibold">1) Big-O of binary search?</div>
+          <div class="subtle">
+            <label><input type="radio" name="q1" value="a"> O(n)</label><br>
+            <label><input type="radio" name="q1" value="b"> O(log n)</label><br>
+            <label><input type="radio" name="q1" value="c"> O(n log n)</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="fw-semibold">2) SQL: select unique values?</div>
+          <div class="subtle">
+            <label><input type="radio" name="q2" value="a"> DISTINCT</label><br>
+            <label><input type="radio" name="q2" value="b"> GROUPALL</label><br>
+            <label><input type="radio" name="q2" value="c"> UNIQUEJOIN</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="fw-semibold">3) REST uses mainly?</div>
+          <div class="subtle">
+            <label><input type="radio" name="q3" value="a"> TCP raw</label><br>
+            <label><input type="radio" name="q3" value="b"> FTP</label><br>
+            <label><input type="radio" name="q3" value="c"> HTTP</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="fw-semibold">4) Git command to create new branch?</div>
+          <div class="subtle">
+            <label><input type="radio" name="q4" value="a"> git push</label><br>
+            <label><input type="radio" name="q4" value="b"> git checkout -b</label><br>
+            <label><input type="radio" name="q4" value="c"> git merge</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="fw-semibold">5) Flask is?</div>
+          <div class="subtle">
+            <label><input type="radio" name="q5" value="a"> Python web framework</label><br>
+            <label><input type="radio" name="q5" value="b"> DB engine</label><br>
+            <label><input type="radio" name="q5" value="c"> OS</label>
+          </div>
+        </div>
+
+        <button class="btn btn-dark w-100">Submit Tech</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="cardx p-4">
+      <div class="fw-bold fs-5 mb-2">JLPT Mini Quiz (3)</div>
+      <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+        <input type="hidden" name="action" value="submit_jlpt"/>
+
+        <label class="form-label">JLPT Level</label>
+        <select class="form-select mb-3" name="jlpt_level">
+          {% for lv in ['N5','N4','N3','N2','N1'] %}
+            <option value="{{lv}}" {% if prof.jlpt_level==lv %}selected{% endif %}>{{ lv }}</option>
+          {% endfor %}
+        </select>
+
+        <div class="mb-3">
+          <div class="fw-semibold">1) 「ありがとう」 polite form?</div>
+          <div class="subtle">
+            <label><input type="radio" name="j1" value="a"> ありがとうございます</label><br>
+            <label><input type="radio" name="j1" value="b"> ありがと</label><br>
+            <label><input type="radio" name="j1" value="c"> あり</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="fw-semibold">2) 「行く」 past?</div>
+          <div class="subtle">
+            <label><input type="radio" name="j2" value="a"> いきます</label><br>
+            <label><input type="radio" name="j2" value="b"> いく</label><br>
+            <label><input type="radio" name="j2" value="c"> いきました</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="fw-semibold">3) Business email greeting?</div>
+          <div class="subtle">
+            <label><input type="radio" name="j3" value="a"> おはよ</label><br>
+            <label><input type="radio" name="j3" value="b"> お世話になっております</label><br>
+            <label><input type="radio" name="j3" value="c"> じゃあね</label>
+          </div>
+        </div>
+
+        <button class="btn btn-dark w-100">Submit JLPT</button>
+      </form>
+    </div>
+
+    <div class="cardx p-4 mt-3">
+      <div class="fw-bold fs-5 mb-2">Keigo / Etiquette Analyzer</div>
+      <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+        <input type="hidden" name="action" value="submit_keigo"/>
+        <textarea class="form-control" name="keigo_text" rows="4"
+          placeholder="Type a polite response. Example: お世話になっております。ご確認いただけますでしょうか。よろしくお願いいたします。"></textarea>
+        <button class="btn btn-dark w-100 mt-3">Analyze Keigo</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="cardx p-4">
+      <div class="fw-bold fs-5 mb-2">HR Interview (Voice Self Introduction)</div>
+      <div class="subtle mb-3">
+        Select English or Japanese, click mic, speak your self-introduction, then submit.
+      </div>
+
+      <form method="post" id="hrInterviewForm">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+        <input type="hidden" name="action" value="submit_hr"/>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Language</label>
+            <select class="form-select" name="hr_lang" id="hr_lang">
+              <option value="en">English</option>
+              <option value="jp">Japanese</option>
+            </select>
+          </div>
+
+          <div class="col-md-8 d-flex align-items-end gap-2">
+            <button type="button" class="btn btn-outline-light" onclick="startVoice()">
+🎤 Start Voice
+</button>
+
+<button type="button" class="btn btn-outline-light" onclick="stopVoice()">
+⏹ Stop
+</button>
+            <span class="badgex" id="micStatus">Mic idle</span>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Detected Speech Text</label>
+            <textarea class="form-control" name="hr_text" id="hr_text" rows="6"
+              placeholder="Your spoken self-introduction will appear here..."></textarea>
+          </div>
+
+          <div class="col-12">
+            <div class="subtle small" id="speechHint">
+              Example English: Hello, my name is Arun. I have two years of experience in Python and Flask...
+            </div>
+          </div>
+
+          <div class="col-12">
+            <button class="btn btn-dark">Submit HR Interview</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="cardx p-4">
+      <div class="fw-bold fs-5 mb-2">Recent Attempts</div>
+      {% if history %}
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Score</th>
+                <th>Details</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for h in history %}
+              <tr>
+                <td class="fw-semibold">{{ h.kind }}</td>
+                <td><span class="badgex">{{ h.score }}/100</span></td>
+                <td class="subtle">{{ h.details }}</td>
+                <td class="subtle">{{ h.created_at }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="subtle">No attempts yet.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+let recognition;
+let isListening = false;
+
+const hrText = document.getElementById("hr_text");
+const hrLang = document.getElementById("hr_lang");
+const micStatus = document.getElementById("micStatus");
+
+function getLang() {
+  return hrLang.value === "jp" ? "ja-JP" : "en-US";
+}
+
+function startVoice() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Use Google Chrome bro 😅");
+    return;
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.lang = getLang();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  isListening = true;
+  micStatus.innerText = "🎤 Listening...";
+  micStatus.style.color = "lime";
+
+  recognition.onresult = function(event) {
+    let text = "";
+
+    for (let i = 0; i < event.results.length; i++) {
+      text += event.results[i][0].transcript + " ";
+    }
+
+    hrText.value = text;
+    console.log("TEXT:", text);
+  };
+
+  recognition.onerror = function(e) {
+    console.log("Error:", e);
+    micStatus.innerText = "Error: " + e.error;
+  };
+
+  recognition.onend = function() {
+    console.log("Mic stopped");
+
+    // 🔥 AUTO RESTART FIX
+    if (isListening) {
+      recognition.start();
+    } else {
+      micStatus.innerText = "Stopped";
+      micStatus.style.color = "red";
+    }
+  };
+
+  recognition.start();
+}
+
+function stopVoice() {
+  isListening = false;
+  if (recognition) {
+    recognition.stop();
+  }
+  micStatus.innerText = "Stopped";
+}
+</script>
+{% endblock %}

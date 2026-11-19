@@ -1,0 +1,192 @@
+{% extends "layout.html" %}
+{% block title %}Candidate Dashboard • SkillBridge JP{% endblock %}
+{% block content %}
+
+<div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
+  <div>
+    <div class="big-title">Candidate Dashboard</div>
+    <div class="subtle">Readiness score + skill-gap roadmap for Japanese IT roles.</div>
+  </div>
+  <div class="d-flex gap-2">
+    <span class="badgex">Verified: {{ 'YES ✅' if prof.verified else 'NO' }}</span>
+    <span class="badgex">JLPT: {{ prof.jlpt_level }}</span>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="cardx p-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="subtle">Readiness Score</div>
+          <div class="display-6 fw-bold">{{ prof.readiness_score }}/100</div>
+        </div>
+        <div class="text-end">
+          <div class="subtle">Updated</div>
+          <div class="fw-semibold">{{ prof.updated_at }}</div>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <div class="subtle mb-2">Breakdown</div>
+
+        <div class="mb-2">
+          <div class="d-flex justify-content-between">
+            <span>Tech</span><span>{{ prof.tech_score }}</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" style="width: {{ prof.tech_score }}%"></div>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <div class="d-flex justify-content-between">
+            <span>JLPT</span><span>{{ prof.jlpt_score }}</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" style="width: {{ prof.jlpt_score }}%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="d-flex justify-content-between">
+            <span>Keigo</span><span>{{ prof.keigo_score }}</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" style="width: {{ prof.keigo_score }}%"></div>
+          </div>
+        </div>
+      </div>
+
+      <canvas id="radar" class="mt-4"></canvas>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="cardx p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <div class="fw-bold fs-5">Profile</div>
+          <div class="subtle">Secure fields stored encrypted in DB.</div>
+        </div>
+      </div>
+
+      <form method="post" action="{{ url_for('candidate_profile_update') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Nationality</label>
+            <input class="form-control" name="nationality" value="{{ prof.nationality or '' }}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Years Experience</label>
+            <input class="form-control" type="number" name="years_exp" value="{{ prof.years_exp or 0 }}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Desired Role</label>
+            <input class="form-control" name="desired_role" value="{{ prof.desired_role or '' }}" placeholder="Backend Engineer">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">JLPT Level</label>
+            <select class="form-select" name="jlpt_level">
+              {% for lv in ['N5','N4','N3','N2','N1'] %}
+                <option value="{{ lv }}" {% if prof.jlpt_level == lv %}selected{% endif %}>{{ lv }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Phone (encrypted)</label>
+            <input class="form-control" name="phone" value="{{ phone or '' }}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Address (encrypted)</label>
+            <input class="form-control" name="address" value="{{ address or '' }}">
+          </div>
+        </div>
+
+        <button class="btn btn-dark mt-4 px-4">Save Profile</button>
+        <a class="btn btn-outline-light mt-4" href="{{ url_for('candidate_roadmap') }}">Show Roadmap</a>
+      </form>
+    </div>
+
+    <div class="cardx p-4 mt-3">
+      <div class="fw-bold fs-5 mb-2">Top Matches</div>
+      <div class="subtle mb-3">Based on your skills + verified readiness score.</div>
+
+      {% if top_matches %}
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Company</th>
+                <th>Match</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in top_matches %}
+                <tr>
+                  <td class="fw-semibold">{{ m.title }}</td>
+                  <td>{{ m.company }} <span class="subtle">• {{ m.location }}</span></td>
+                  <td><span class="badgex">{{ m.match_score }}/100</span></td>
+                  <td class="subtle">{{ m.gap_summary }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="subtle">No matches yet. Recruiters will generate matches after job posts.</div>
+      {% endif %}
+
+      {% if roadmap_steps %}
+        <hr class="border-0 my-4" style="height:1px;background:rgba(255,255,255,.10)">
+        <div class="fw-bold fs-5 mb-2">Personalized Roadmap</div>
+
+        <div class="row g-3">
+          {% for s in roadmap_steps %}
+            <div class="col-md-6">
+              <div class="cardx p-3">
+                <div class="fw-bold">{{ s['title'] }}</div>
+                <ul class="subtle mt-2 mb-0">
+                  {% for it in s['items'] %}
+                    <li>{{ it }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const ctx = document.getElementById("radar");
+  new Chart(ctx, {
+    type: "radar",
+    data: {
+      labels: ["Tech", "JLPT", "Keigo"],
+      datasets: [{
+        label: "Score",
+        data: [{{ prof.tech_score }}, {{ prof.jlpt_score }}, {{ prof.keigo_score }}],
+        fill: true
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { r: { suggestedMin: 0, suggestedMax: 100 } }
+    }
+  });
+</script>
+
+{% endblock %}

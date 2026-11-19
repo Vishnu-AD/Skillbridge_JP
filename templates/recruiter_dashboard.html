@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block title %}Recruiter Dashboard • SkillBridge JP{% endblock %}
+{% block content %}
+<div class="big-title mb-1">Recruiter Portal</div>
+<div class="subtle mb-4">Verified candidate readiness + AI matches for Japanese IT roles.</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="cardx p-4">
+      <div class="subtle">Total Candidates</div>
+      <div class="display-6 fw-bold">{{ total_candidates }}</div>
+      <a class="btn btn-dark mt-3 w-100" href="{{ url_for('recruiter_jobpost') }}">Post a Job</a>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="cardx p-4">
+      <div class="fw-bold fs-5 mb-2">Your Jobs</div>
+      {% if jobs %}
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead><tr><th>Role</th><th>Company</th><th>Skills</th><th></th></tr></thead>
+            <tbody>
+              {% for j in jobs %}
+              <tr>
+                <td class="fw-semibold">{{ j.title }}</td>
+                <td>{{ j.company }}</td>
+                <td class="subtle">{{ j.extracted_skills }}</td>
+                <td>
+                  <a class="btn btn-outline-light btn-sm" href="{{ url_for('recruiter_candidates', job_id=j.id) }}">
+                    View Matches
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="subtle">No jobs posted yet.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

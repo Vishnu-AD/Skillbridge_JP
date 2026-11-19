@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Verify Candidates • SkillBridge JP{% endblock %}
+{% block content %}
+<div class="big-title mb-1">Verification Panel</div>
+<div class="subtle mb-4">Mark candidates as verified to improve recruiter trust.</div>
+
+<div class="cardx p-4">
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th>Candidate</th><th>Email</th><th>Scores</th><th>Readiness</th><th>Verified</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for c in candidates %}
+        <tr>
+          <td class="fw-semibold">{{ c.full_name }}</td>
+          <td class="subtle">{{ c.email }}</td>
+          <td class="subtle">T:{{c.tech_score}} JLPT:{{c.jlpt_score}} K:{{c.keigo_score}}</td>
+          <td><span class="badgex">{{ c.readiness_score }}/100</span></td>
+          <td>{{ '✅' if c.verified else '—' }}</td>
+          <td>
+            <form method="post" class="d-flex gap-2">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+              <input type="hidden" name="user_id" value="{{ c.id }}"/>
+              <select class="form-select form-select-sm" name="verified" style="max-width:140px">
+                <option value="0" {% if not c.verified %}selected{% endif %}>Unverified</option>
+                <option value="1" {% if c.verified %}selected{% endif %}>Verified</option>
+              </select>
+              <button class="btn btn-dark btn-sm">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}Candidates • SkillBridge JP{% endblock %}
+{% block content %}
+<div class="big-title mb-1">Candidate Search & Match</div>
+<div class="subtle mb-4">Use job-based matching for ranking & skill gaps.</div>
+
+{% if job %}
+  <div class="cardx p-4 mb-3">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <div class="fw-bold fs-5">{{ job.title }}</div>
+        <div class="subtle">{{ job.company }} • {{ job.location }}</div>
+      </div>
+      <span class="badgex">JD Skills: {{ job.extracted_skills }}</span>
+    </div>
+  </div>
+
+  <div class="cardx p-4">
+    <div class="fw-bold fs-5 mb-2">Ranked Matches</div>
+    {% if ranked %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Candidate</th><th>Match</th><th>Readiness</th><th>JLPT</th><th>Verified</th><th>Gaps</th></tr></thead>
+          <tbody>
+            {% for r in ranked %}
+            <tr>
+              <td class="fw-semibold">{{ r.full_name }}</td>
+              <td><span class="badgex">{{ r.match_score }}/100</span></td>
+              <td class="subtle">{{ r.readiness_score }}/100</td>
+              <td class="subtle">{{ r.jlpt_level }}</td>
+              <td>{{ '✅' if r.verified else '—' }}</td>
+              <td class="subtle">{{ r.gap_summary }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="subtle">No ranked matches yet.</div>
+    {% endif %}
+  </div>
+{% else %}
+  <div class="cardx p-4">
+    <div class="subtle">Tip: Open from a job to generate ranked matches.</div>
+  </div>
+{% endif %}
+
+{% endblock %}

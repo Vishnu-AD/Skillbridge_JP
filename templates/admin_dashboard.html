@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard • SkillBridge JP{% endblock %}
+{% block content %}
+<div class="big-title mb-1">Admin Control</div>
+<div class="subtle mb-4">Verification + platform health overview.</div>
+
+<div class="row g-3">
+  <div class="col-md-3"><div class="cardx p-4"><div class="subtle">Candidates</div><div class="display-6 fw-bold">{{ counts.candidates }}</div></div></div>
+  <div class="col-md-3"><div class="cardx p-4"><div class="subtle">Recruiters</div><div class="display-6 fw-bold">{{ counts.recruiters }}</div></div></div>
+  <div class="col-md-3"><div class="cardx p-4"><div class="subtle">Jobs</div><div class="display-6 fw-bold">{{ counts.jobs }}</div></div></div>
+  <div class="col-md-3"><div class="cardx p-4"><div class="subtle">Verified</div><div class="display-6 fw-bold">{{ counts.verified }}</div></div></div>
+
+  <div class="col-12">
+    <div class="cardx p-4">
+      <div class="fw-bold fs-5 mb-2">Recent Candidate Updates</div>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Name</th><th>Email</th><th>Readiness</th><th>Verified</th><th>Updated</th></tr></thead>
+          <tbody>
+            {% for r in recent %}
+            <tr>
+              <td class="fw-semibold">{{ r.full_name }}</td>
+              <td class="subtle">{{ r.email }}</td>
+              <td><span class="badgex">{{ r.readiness_score }}/100</span></td>
+              <td>{{ '✅' if r.verified else '—' }}</td>
+              <td class="subtle">{{ r.updated_at }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

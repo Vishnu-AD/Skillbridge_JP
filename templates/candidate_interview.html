@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Interview Simulation • SkillBridge JP{% endblock %}
+{% block content %}
+<div class="big-title mb-1">Interview Simulation</div>
+<div class="subtle mb-4">Practice tech + Japanese etiquette responses with instant feedback.</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="cardx p-4">
+      <div class="fw-bold fs-5 mb-2">Scenario</div>
+      <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+        <label class="form-label">Choose</label>
+        <select class="form-select mb-3" name="scenario">
+          <option>Apologize for delay and request extension (Keigo email)</option>
+          <option>Explain a project tradeoff to interviewer</option>
+          <option>Ask clarification about job requirements politely</option>
+        </select>
+
+        <label class="form-label">Your Answer</label>
+        <textarea class="form-control" rows="6" name="answer"
+         placeholder="Example: お世話になっております。遅延してしまい申し訳ございません。期限を一日延長いただけますでしょうか。よろしくお願いいたします。"></textarea>
+
+        <button class="btn btn-dark w-100 mt-3">Evaluate</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="cardx p-4">
+      <div class="fw-bold fs-5 mb-2">Feedback</div>
+      {% if feedback %}
+        <div class="d-flex gap-2 flex-wrap">
+          <span class="badgex">Simulation: {{ feedback.sim_score }}/100</span>
+          <span class="badgex">Keigo: {{ feedback.keigo_score }}/100</span>
+          <span class="badgex">Tech clarity: {{ feedback.tech_clarity }}/100</span>
+        </div>
+        <div class="mt-3 fw-semibold">Tips</div>
+        <ul class="subtle mt-2">
+          {% for t in feedback.tips %}
+            <li>{{ t }}</li>
+          {% endfor %}
+          {% if not feedback.tips %}<li>Good etiquette detected.</li>{% endif %}
+        </ul>
+      {% else %}
+        <div class="subtle">Submit an answer to get feedback.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
